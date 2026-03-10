@@ -4,6 +4,17 @@
 OpsPulse is a high-performance business intelligence platform designed for Small and Medium-sized Businesses (SMBs). It unifies fragmented data from sales, inventory, and operations into a single, high-fidelity dashboard. With its intelligent **Business Stress Score**, OpsPulse provides actionable insights, automated crisis alerts, and an AI-powered War Room mode to help owners make data-driven decisions in real-time.
 
 ---
+<img width="1600" height="724" alt="image" src="https://github.com/user-attachments/assets/23e7468a-3827-4bd7-9fe8-3dc2d15c9dcd" />
+<img width="1600" height="725" alt="image" src="https://github.com/user-attachments/assets/d59970ef-2ebc-4554-8ba6-d71f8cee8ab6" />
+<img width="1600" height="722" alt="image" src="https://github.com/user-attachments/assets/ba97fbda-53a4-4304-930e-cd7aa8b3df39" />
+<img width="1600" height="725" alt="image" src="https://github.com/user-attachments/assets/19ef184a-ac70-427c-a0b7-2cc760af7f74" />
+<img width="1600" height="730" alt="image" src="https://github.com/user-attachments/assets/07ad3dff-67d5-4d0c-b319-7c4d9fbbe8a8" />
+<img width="1600" height="718" alt="image" src="https://github.com/user-attachments/assets/45dd5527-1908-406c-8dd3-b78d9ca9ca4a" />
+<img width="437" height="868" alt="image" src="https://github.com/user-attachments/assets/7b968836-5606-40c0-9b82-bf5a71040f88" />
+<img width="1600" height="718" alt="image" src="https://github.com/user-attachments/assets/3aff6efc-edfe-4bd6-b081-47e9255724bc" />
+<img width="1600" height="251" alt="image" src="https://github.com/user-attachments/assets/afa4ef90-8322-4d79-a094-fbff182de4ec" />
+<img width="874" height="792" alt="image" src="https://github.com/user-attachments/assets/f8452b7b-e470-439d-8689-8a4e535c28a9" />
+
 
 ## 🚀 Key Features
 

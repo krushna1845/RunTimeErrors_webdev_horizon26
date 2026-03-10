@@ -49,7 +49,6 @@ When a crisis is detected (BSS > Threshold), the UI transforms. All non-essentia
 * **Real-time Engine:** Socket.io / Supabase Realtime
 * **Backend:** Node.js (TypeScript)
 * **Database:** PostgreSQL (Supabase)
-* **State Management:** Zustand (for War Room global state)
 
 ---
 

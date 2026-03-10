@@ -51,6 +51,81 @@ Our system categorizes signals to prevent dashboard fatigue:
 When a crisis is detected (BSS > Threshold), the UI transforms. All non-essential data is stripped away, surfacing only the most critical, actionable metrics to resolve the simulation crisis.
 
 ---
+## System Architecture
+
+OpsPulse follows a **three-tier architecture**: a React SPA on the frontend, a Node.js/Express REST + WebSocket backend, and Supabase as the managed backend-as-a-service layer. Real-time updates flow from Supabase Realtime directly to the browser, bypassing the REST API for low-latency reads.
+
+### High-Level Architecture Overview
+
+```mermaid
+graph TB
+    subgraph CLIENT["🌐 Browser — React + Vite + Tailwind"]
+        direction TB
+        UI["🗂️ Dashboard UI\n(Charts, KPIs, Alerts)"]
+        Chat["🤖 AI Chatbot\n(Gemini-powered)"]
+        WR["🚨 War Room Mode\n(Crisis Overlay)"]
+        AC["🔐 Auth Context\n(JWT / Session)"]
+        PC["💎 Plan Context\n(Free / Premium gating)"]
+    end
+
+    subgraph BACKEND["⚙️ Backend — Node.js + Express (Render/Railway)"]
+        direction TB
+        API["🔀 REST API\n/api/*"]
+        SS["📊 Stress Score Engine\nWeighted multi-metric score"]
+        AL["🔔 Alert Engine\nCrisis / Opportunity / Anomaly"]
+        REC["💡 Recommender\nActionable suggestions"]
+        PRED["📈 Predictor\n7-day risk forecast"]
+        DS["🎲 Data Simulator\nMock real-time ticks"]
+        MW["🛡️ Auth Middleware\nJWT via Supabase"]
+    end
+
+    subgraph SUPABASE["🗄️ Supabase — DB + Auth + Realtime"]
+        direction TB
+        AUTH["🔑 Supabase Auth\n(Email / OAuth)"]
+        DB[("🐘 PostgreSQL\nmetrics, alerts, scores")]
+        RT["⚡ Realtime\nPub/Sub channels"]
+    end
+
+    subgraph EXTERNAL["🌍 External Services"]
+        GEMINI["✨ Google Gemini API\n(AI Chatbot responses)"]
+    end
+
+    %% Client ↔ Backend
+    UI  -- "REST (Axios)" --> API
+    Chat -- "POST /api/chatbot" --> API
+    AC  -- "token attached" --> MW
+    MW  --> API
+
+    %% Backend internal
+    API --> SS
+    API --> AL
+    API --> REC
+    API --> PRED
+    DS  -- "INSERT every tick" --> DB
+    API -- "reads / writes" --> DB
+
+    %% Backend ↔ External
+    API -- "Gemini SDK" --> GEMINI
+
+    %% Supabase internal
+    AUTH -- "manages" --> DB
+    DB   -- "row changes" --> RT
+
+    %% Realtime push to client
+    RT  -- "WebSocket push" --> UI
+
+    %% Styling
+    classDef client   fill:#1e3a5f,stroke:#4a9eff,color:#e0f0ff
+    classDef backend  fill:#1a3a2a,stroke:#4aff8c,color:#e0ffe8
+    classDef supa     fill:#3a1a4a,stroke:#b44aff,color:#f5e0ff
+    classDef ext      fill:#3a2a10,stroke:#ffaa4a,color:#fff3e0
+    class UI,Chat,WR,AC,PC client
+    class API,SS,AL,REC,PRED,DS,MW backend
+    class AUTH,DB,RT supa
+    class GEMINI ext
+```
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -61,6 +136,7 @@ When a crisis is detected (BSS > Threshold), the UI transforms. All non-essentia
 * **Database:** PostgreSQL (Supabase)
 
 ---
+
 ### Data Pipeline Flow
 
 This diagram shows the end-to-end request/data lifecycle — from data generation to rendering on screen.

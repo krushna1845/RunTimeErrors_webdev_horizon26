@@ -12,7 +12,7 @@ export default function SupportTicketCard({ data }) {
                     { label: 'Open', val: data.openTickets, color: '#ef4444' },
                     { label: 'Resolved', val: data.resolvedTickets, color: '#10b981' },
                     { label: 'Avg Response', val: `${data.avgResponse}h`, color: '#f59e0b' },
-                    { label: 'Satisfaction', val: `${data.satisfaction}★`, color: '#6366f1' },
+                    { label: 'Satisfaction', val: `${data.satisfaction || '—'}★`, color: '#6366f1' },
                 ].map(({ label, val, color }) => (
                     <div key={label} style={{ background: 'var(--bg-secondary)', borderRadius: 8, padding: '10px' }}>
                         <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{label}</div>

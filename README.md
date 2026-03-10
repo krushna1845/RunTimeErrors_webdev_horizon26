@@ -3,8 +3,6 @@
 
 OpsPulse is a high-performance business intelligence platform designed for Small and Medium-sized Businesses (SMBs). It unifies fragmented data from sales, inventory, and operations into a single, high-fidelity dashboard. With its intelligent **Business Stress Score**, OpsPulse provides actionable insights, automated crisis alerts, and an AI-powered War Room mode to help owners make data-driven decisions in real-time.
 
-![Project Mockup](file:///C:/Users/kirve/.gemini/antigravity/brain/a127aba6-d54c-4504-a184-05c195b653d8/opspulse_dashboard_mockup_1773125531677.png)
-
 ---
 
 ## 🚀 Key Features
@@ -15,33 +13,6 @@ OpsPulse is a high-performance business intelligence platform designed for Small
 - **AI Chatbot Assistant**: Powered by Google Gemini, providing strategic advice based on your current business metrics.
 - **Role-Based Views**: Tailored dashboards for both Business Owners and Operations Managers.
 - **Predictive Risk Trends**: Extrapolates current trends to forecast potential risks in the next 7 days.
-
----
-
-## 🏗️ System Architecture
-
-OpsPulse is built on a modern, reactive stack designed for speed and scalability.
-
-```mermaid
-graph TB
-    subgraph "Frontend (React + Vite + Tailwind)"
-        UI[Dashboard UI]
-        Chat[AI Chatbot]
-        WR[War Room Mode]
-    end
-    subgraph "Backend (Node.js + Express)"
-        API[REST API]
-        SS[Stress Score Engine]
-        AL[Alert Engine]
-        DS[Mock Data Simulator]
-        WS[WebSocket Server]
-    end
-    UI <--> API
-    Chat --> API
-    API --> SS
-    API --> AL
-    API --> DS
-```
 
 ---
 

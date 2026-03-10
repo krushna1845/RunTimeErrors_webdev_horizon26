@@ -9,11 +9,14 @@ import CashFlowChart from '../components/dashboard/CashFlowChart';
 import SupportTicketCard from '../components/dashboard/SupportTicketCard';
 import AlertPanel from '../components/dashboard/AlertPanel';
 import RecommendationFeed from '../components/recommendations/RecommendationFeed';
+import HistoryChart from '../components/dashboard/HistoryChart';
+import UniversalDataPanel from '../components/dashboard/UniversalDataPanel';
 import { useMetrics } from '../hooks/useMetrics';
 import { useStressScore } from '../hooks/useStressScore';
 import { useAlerts } from '../hooks/useAlerts';
 import { usePlan } from '../context/PlanContext';
 import { useUI } from '../context/UIContext';
+import { useBusiness } from '../context/BusinessContext';
 import { getRecommendations, setSevereCrisis } from '../lib/api';
 import { formatCurrency, formatNumber } from '../lib/utils';
 import { Lock } from 'lucide-react';
@@ -27,10 +30,11 @@ const section = (title, children, style = {}) => (
 
 export default function OwnerDashboard() {
     const { sales, inventory, support, cashflow, isExternal, source, refresh } = useMetrics(5000);
-    const { data: scoreData } = useStressScore(5000);
     const { alerts, dismiss } = useAlerts(7000);
     const { hasFeature } = usePlan();
     const { toggleChat } = useUI();
+    const { businessInfo, label, uploadedData } = useBusiness();
+    const { data: scoreData } = useStressScore(5000, businessInfo.type);
     const navigate = useNavigate();
     const [recs, setRecs] = useState([]);
     const [isCrisisMode, setIsCrisisMode] = useState(false);
@@ -41,7 +45,7 @@ export default function OwnerDashboard() {
             setRecs(data);
         };
         fetchRecs();
-    }, [scoreData]);
+    }, [scoreData, sales, inventory]); // Refresh when score or key metrics change
 
     const toggleCrisis = async () => {
         const nextMode = !isCrisisMode;
@@ -93,6 +97,17 @@ export default function OwnerDashboard() {
                             Simulated environment for testing crisis response
                         </span>
                     )}
+                    {/* Industry badge */}
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        background: businessInfo.color + '18',
+                        border: `1px solid ${businessInfo.color}44`,
+                        color: businessInfo.color,
+                        padding: '3px 10px', borderRadius: 20,
+                        fontSize: 11, fontWeight: 600,
+                    }}>
+                        {businessInfo.emoji} {businessInfo.label}
+                    </div>
                 </div>
             </div>
 
@@ -114,11 +129,32 @@ export default function OwnerDashboard() {
             )}
 
             <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+                {/* Uploaded Data Insights — shown when user has uploaded a custom file */}
+                {uploadedData && (
+                    <section className="card" style={{ padding: '20px' }}>
+                        <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4, letterSpacing: '-0.02em' }}>
+                            📊 Uploaded Data Insights
+                        </div>
+                        <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16 }}>
+                            {businessInfo.emoji} Detected as <strong>{businessInfo.label}</strong>
+                            {businessInfo.confidence < 100 && <span style={{ opacity: 0.6 }}> ({businessInfo.confidence}% confidence)</span>}
+                        </div>
+                        <UniversalDataPanel
+                            rawTable={uploadedData.rawTable}
+                            chartData={uploadedData.chartData}
+                            summary={uploadedData.summary}
+                            schemaInfo={uploadedData.schemaInfo}
+                            businessInfo={businessInfo}
+                        />
+                    </section>
+                )}
+
                 {/* Top row: KPI cards */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-                    <MetricCard title="Revenue" value={sales ? formatCurrency(sales.current.revenue) : '—'} sub="Today" delta={2.4} icon="💰" />
-                    <MetricCard title="Orders" value={sales ? formatNumber(sales.current.orders) : '—'} sub="Last 24h" delta={-1.8} icon="📦" />
-                    <MetricCard title="Refunds" value={sales ? formatNumber(sales.current.refunds) : '—'} sub="Last 24h" delta={5.2} icon="↩️" />
+                    <MetricCard title={label('revenue').label} value={sales ? formatCurrency(sales.current.revenue) : '—'} sub={label('revenue').desc} delta={2.4} icon="💰" />
+                    <MetricCard title={label('orders').label} value={sales ? formatNumber(sales.current.orders) : '—'} sub={label('orders').desc} delta={-1.8} icon="📦" />
+                    <MetricCard title={label('refunds').label} value={sales ? formatNumber(sales.current.refunds) : '—'} sub={label('refunds').desc} delta={5.2} icon="↩️" />
                     <MetricCard title="Cash Balance" value={cashflow ? formatCurrency(cashflow.current.balance) : '—'} sub="Current" delta={cashflow ? ((cashflow.current.inflow - cashflow.current.outflow) / cashflow.current.outflow * 100) : 0} icon="🏦" />
                 </div>
 
@@ -151,6 +187,9 @@ export default function OwnerDashboard() {
                             )
                     )}
                 </div>
+
+                {/* Full-width History Timeline */}
+                <HistoryChart />
             </div>
         </>
     );

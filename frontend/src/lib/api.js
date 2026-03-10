@@ -44,8 +44,9 @@ export async function getCashflowMetrics() {
   return res.data.cashflow;
 }
 
-export async function getStressScore() {
-  return (await api.get('/stress-score')).data;
+export async function getStressScore(businessType = 'generic') {
+  const params = businessType !== 'generic' ? `?businessType=${businessType}` : '';
+  return (await api.get(`/stress-score${params}`)).data;
 }
 
 export async function getAlerts() {
@@ -78,4 +79,8 @@ export async function setRemoteDataSource(url) {
 
 export async function getAllMetrics() {
   return (await api.get('/metrics')).data;
+}
+
+export async function getHistory(range = '24h') {
+  return (await api.get(`/history?range=${range}`)).data;
 }

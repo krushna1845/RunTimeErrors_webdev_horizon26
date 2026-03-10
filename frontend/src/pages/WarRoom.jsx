@@ -9,10 +9,12 @@ import { useStressScore } from '../hooks/useStressScore';
 import { useAlerts } from '../hooks/useAlerts';
 import { getRecommendations } from '../lib/api';
 import { usePlan } from '../context/PlanContext';
+import { useBusiness } from '../context/BusinessContext';
 import { Lock } from 'lucide-react';
 
 export default function WarRoom() {
-    const { data } = useStressScore(3000);
+    const { businessInfo } = useBusiness();
+    const { data } = useStressScore(3000, businessInfo.type);
     const { alerts, dismiss } = useAlerts(5000);
     const { hasFeature } = usePlan();
     const navigate = useNavigate();

@@ -140,7 +140,7 @@ Frontend [icon: monitor, color: purple] {
   War Room Mode [icon: alert-triangle]
 }
 
-// Event flow
+ Event flow
 Sales Worker > StressEngine: events
 Inventory Worker > StressEngine: events
 Support Worker > StressEngine: events

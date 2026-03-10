@@ -11,8 +11,7 @@ OpsPulse is a high-performance business intelligence platform designed for Small
 <img width="1600" height="730" alt="image" src="https://github.com/user-attachments/assets/07ad3dff-67d5-4d0c-b319-7c4d9fbbe8a8" />
 <img width="1600" height="718" alt="image" src="https://github.com/user-attachments/assets/45dd5527-1908-406c-8dd3-b78d9ca9ca4a" />
 <img width="437" height="868" alt="image" src="https://github.com/user-attachments/assets/7b968836-5606-40c0-9b82-bf5a71040f88" />
-<img width="1600" height="718" alt="image" src="https://github.com/user-attachments/assets/3aff6efc-edfe-4bd6-b081-47e9255724bc" />
-<img width="1600" height="251" alt="image" src="https://github.com/user-attachments/assets/afa4ef90-8322-4d79-a094-fbff182de4ec" />
+
 
 
 ## 🚀 Key Features

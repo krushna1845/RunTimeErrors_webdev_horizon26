@@ -117,6 +117,12 @@ Stress Score (0–100) =
 | Predictive Risk | ❌ | ✅ |
 
 ---
+### 🔄 Real-Time Data Pipeline
+To meet the "No Static Dashboards" requirement, OpsPulse utilizes an **Event-Driven Architecture**:
+1. **Event Producers:** Background workers simulate real-time streams from Sales, Inventory, and Support verticals.
+2. **Weighted Processing:** Each event passes through our `StressEngine` to update the global Business Stress Score.
+3. **WebSocket Broadcast:** Updates are pushed via WebSockets to the frontend, ensuring sub-second latency.
+4. **State Synchronization:** The frontend uses reactive state (Zustand) to trigger "War Room" mode transitions instantly.
 
 ## 🏁 Getting Started
 

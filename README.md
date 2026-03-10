@@ -117,42 +117,7 @@ Stress Score (0–100) =
 | Predictive Risk | ❌ | ✅ |
 
 ---
-title Real-Time Data Pipeline - OpsPulse
-
-Event Producers [icon: activity, color: blue] {
-  Sales Worker [icon: dollar-sign]
-  Inventory Worker [icon: package]
-  Support Worker [icon: headphones]
-}
-
-Processing [icon: cpu, color: orange] {
-  StressEngine [icon: zap]
-  Business Stress Score [icon: bar-chart-2]
-}
-
-"Real-Time Layer" [icon: radio, color: green] {
-  WebSocket Server [icon: server]
-}
-
-Frontend [icon: monitor, color: purple] {
-  React App [icon: react]
-  Zustand State [icon: database]
-  War Room Mode [icon: alert-triangle]
-}
-
- Event flow
-Sales Worker > StressEngine: events
-Inventory Worker > StressEngine: events
-Support Worker > StressEngine: events
-
-StressEngine > Business Stress Score: weighted update
-
-Business Stress Score > WebSocket Server: publish
-
-WebSocket Server --> React App: push updates
-
-React App > Zustand State: update state
-Zustand State --> War Room Mode: trigger transition
+ 
 ## 🏁 Getting Started
 
 ### 1. Prerequisites

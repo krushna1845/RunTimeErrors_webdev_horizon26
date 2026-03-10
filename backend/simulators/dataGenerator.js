@@ -1,6 +1,8 @@
 // In-memory simulator for business metrics
 // Supports 'severe_crisis' mode for demonstration.
 const axios = require('axios');
+const { pushSnapshot } = require('./historyStore');
+const { calculateStressScore } = require('../engines/stressScore');
 
 let state = {
     isSevereCrisis: false,
@@ -17,6 +19,7 @@ let state = {
     openTickets: 23,
     resolvedTickets: 87,
     avgResponse: 3.2,
+    satisfaction: 4.2,   // customer satisfaction out of 5
     inflow: 52000,
     outflow: 38000,
     tickCount: 0,
@@ -37,6 +40,7 @@ const advanceTick = () => {
         state.refunds = Math.min(100, state.refunds + randInt(5, 15));
         state.openTickets = Math.min(200, state.openTickets + randInt(10, 30));
         state.avgResponse = Math.min(24, state.avgResponse + random(1, 3));
+        state.satisfaction = Math.max(1.0, parseFloat((state.satisfaction - random(0.1, 0.4)).toFixed(1)));
         state.inflow = Math.max(5000, state.inflow * 0.6);
         state.outflow = Math.min(100000, state.outflow + randInt(5000, 15000));
         state.inventory.forEach(item => {
@@ -49,12 +53,17 @@ const advanceTick = () => {
         state.openTickets = Math.max(0, state.openTickets + randInt(-5, 8));
         state.resolvedTickets = state.resolvedTickets + randInt(2, 10);
         state.avgResponse = Math.max(0.5, Math.min(10, state.avgResponse + random(-0.5, 0.8)));
+        state.satisfaction = Math.min(5.0, Math.max(1.0, parseFloat((state.satisfaction + random(-0.1, 0.15)).toFixed(1))));
         state.inflow = Math.max(10000, state.inflow + random(-5000, 8000));
         state.outflow = Math.max(5000, state.outflow + random(-4000, 6000));
         state.inventory.forEach(item => {
             item.stock = Math.max(0, item.stock + randInt(-10, 5));
         });
     }
+
+    // Push snapshot to history store after each tick
+    const stressResult = calculateStressScore(state);
+    pushSnapshot(state, stressResult);
 };
 
 const setSevereCrisis = (active) => {

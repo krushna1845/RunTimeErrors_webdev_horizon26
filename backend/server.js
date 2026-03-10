@@ -7,6 +7,7 @@ const { getAlerts } = require('./engines/alertEngine');
 const { getRecommendations } = require('./engines/recommender');
 const { getPredictions } = require('./engines/predictor');
 const authRoutes = require('./routes/auth');
+const { getHistory } = require('./simulators/historyStore');
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.use('/api/auth', authRoutes);
 
 // 1. Stress Score
 app.get('/api/stress-score', async (req, res) => {
-    res.json(calculateStressScore(await getMetrics()));
+    const businessType = req.query.businessType || 'generic';
+    res.json(calculateStressScore(await getMetrics(), businessType));
 });
 
 // 2. Metrics
@@ -41,7 +43,8 @@ app.get('/api/metrics', async (req, res) => {
         support: {
             openTickets: metrics.openTickets,
             resolvedTickets: metrics.resolvedTickets,
-            avgResponse: parseFloat(metrics.avgResponse.toFixed(1))
+            avgResponse: parseFloat(metrics.avgResponse.toFixed(1)),
+            satisfaction: metrics.satisfaction
         },
         cashflow: {
             current: { inflow: metrics.inflow, outflow: metrics.outflow, balance: metrics.inflow - metrics.outflow },
@@ -58,8 +61,8 @@ app.get('/api/metrics', async (req, res) => {
 });
 
 // 3. Alerts
-app.get('/api/alerts', (req, res) => {
-    res.json(getAlerts());
+app.get('/api/alerts', async (req, res) => {
+    res.json(await getAlerts());
 });
 
 // 4. Recommendations
@@ -72,6 +75,12 @@ app.get('/api/recommendations', async (req, res) => {
 app.get('/api/predictions', async (req, res) => {
     const metrics = await getMetrics();
     res.json(getPredictions(metrics));
+});
+
+// 6. History
+app.get('/api/history', (req, res) => {
+    const range = req.query.range || '24h';
+    res.json(getHistory(range));
 });
 
 // 6. Simulation Controls

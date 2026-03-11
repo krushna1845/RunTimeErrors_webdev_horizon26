@@ -5,11 +5,13 @@ import { Check } from 'lucide-react';
 
 const tiers = [
     {
+        id: 'free',
         name: 'Free', price: '$0', period: '/mo', color: '#6366f1',
         features: ['Owner Dashboard', 'Basic Stress Score', 'Simple Alerts', '24h Data History'],
-        cta: 'Current Plan', disabled: true,
+        cta: 'Switch to Free',
     },
     {
+        id: 'premium',
         name: 'Premium', price: '$29', period: '/mo', color: '#10b981', highlight: true,
         features: [
             'Everything in Free',
@@ -27,7 +29,7 @@ const tiers = [
 ];
 
 export default function Pricing() {
-    const { plan, upgradeToPremium } = usePlan();
+    const { plan, upgradeToPremium, downgradeToPlan } = usePlan();
 
     return (
         <>
@@ -82,16 +84,22 @@ export default function Pricing() {
 
                             <button
                                 className={`btn ${tier.highlight ? 'btn-primary' : 'btn-ghost'}`}
-                                disabled={tier.disabled || plan === 'premium'}
-                                onClick={tier.highlight ? upgradeToPremium : undefined}
+                                disabled={plan === tier.id}
+                                onClick={() => {
+                                    if (tier.id === 'premium') {
+                                        upgradeToPremium();
+                                    } else {
+                                        downgradeToPlan('free');
+                                    }
+                                }}
                                 style={{
                                     width: '100%', justifyContent: 'center',
                                     background: tier.highlight ? tier.color : undefined,
-                                    opacity: (tier.disabled || plan === 'premium') ? 0.6 : 1,
-                                    cursor: (tier.disabled || plan === 'premium') ? 'not-allowed' : 'pointer',
+                                    opacity: (plan === tier.id) ? 0.6 : 1,
+                                    cursor: (plan === tier.id) ? 'not-allowed' : 'pointer',
                                 }}
                             >
-                                {plan === 'premium' && tier.highlight ? '✅ Active' : tier.cta}
+                                {plan === tier.id ? '✅ Active Plan' : tier.cta}
                             </button>
                         </motion.div>
                     ))}

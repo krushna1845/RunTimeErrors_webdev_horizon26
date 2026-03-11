@@ -13,19 +13,30 @@ export function PlanProvider({ children }) {
     const [plan, setPlan] = useState('free');
 
     useEffect(() => {
-        const stored = localStorage.getItem('ops_plan') || 'free';
+        if (!user) {
+            setPlan('free');
+            return;
+        }
+        const stored = localStorage.getItem(`ops_plan_${user.id}`) || 'free';
         setPlan(stored);
     }, [user]);
 
     const upgradeToPremium = () => {
-        localStorage.setItem('ops_plan', 'premium');
+        if (!user) return;
+        localStorage.setItem(`ops_plan_${user.id}`, 'premium');
         setPlan('premium');
+    };
+
+    const downgradeToPlan = (targetPlan = 'free') => {
+        if (!user) return;
+        localStorage.setItem(`ops_plan_${user.id}`, targetPlan);
+        setPlan(targetPlan);
     };
 
     const hasFeature = (feature) => PLAN_FEATURES[plan]?.includes(feature) ?? false;
 
     return (
-        <PlanContext.Provider value={{ plan, hasFeature, upgradeToPremium }}>
+        <PlanContext.Provider value={{ plan, hasFeature, upgradeToPremium, downgradeToPlan }}>
             {children}
         </PlanContext.Provider>
     );
